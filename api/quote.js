@@ -107,7 +107,7 @@ function spokenDollars(n) {
 }
 
 function buildVerbalScript(customerName, quote, distanceMiles, usingFallback) {
-  const firstName = (customerName || 'there').split(' ')[0];
+  const firstName = customerName || 'there';
   const { totalHours, moveCost, packingCost, disposalCost, truckCharge, totalCost } = quote;
 
   const miles = Math.round(distanceMiles);
@@ -144,7 +144,7 @@ function buildVerbalScript(customerName, quote, distanceMiles, usingFallback) {
 }
 
 function buildSmsBody(customerName, quote, distanceMiles, originZip, destinationZip) {
-  const firstName = (customerName || 'there').split(' ')[0];
+  const firstName = customerName || 'there';
   const { totalHours, moveCost, packingCost, disposalCost, truckCharge, totalCost } = quote;
   const miles = Math.round(distanceMiles);
 

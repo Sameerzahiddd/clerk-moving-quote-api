@@ -48,8 +48,8 @@
       "id": "collect_name",
       "type": "collect",
       "saves_to": "name",
-      "ask": "May I start with your full name?",
-      "confirm": "Great, I have you as {{name}}. Is that correct?",
+      "ask": "May I start with your first name?",
+      "confirm": "Great, {{name}}. Nice to meet you!",
       "on_correction": "Re-collect and confirm again before proceeding."
     },
     {
