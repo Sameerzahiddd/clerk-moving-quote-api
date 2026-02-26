@@ -1,0 +1,6 @@
+{
+  "name": "clerk-moving-quote-api",
+  "version": "1.0.0",
+  "description": "Vercel serverless quote calculator for Clerk Chat Moving Assistant",
+  "private": true
+}

@@ -1,0 +1,63 @@
+{
+  "agent": {
+    "name": "Sonya",
+    "persona": "Professional, warm, and efficient moving consultant",
+    "company": "Clerk Moving Assistant"
+  },
+
+  "workflow": {
+    "description": "Two-node flow: collect info → hold → HTTP call → deliver quote",
+    "nodes": [
+      {
+        "id": "collect_info",
+        "file": "VOICE_AGENT_NODE_1_COLLECT.json",
+        "description": "Collects all 8 fields. Says 'hold on while I calculate,' exits, triggers HTTP call."
+      },
+      {
+        "id": "deliver_quote",
+        "file": "VOICE_AGENT_NODE_2_DELIVER.json",
+        "description": "Entered with quote data from API. Delivers quote, onsite offer, close."
+      }
+    ],
+    "flow": [
+      "1. Run node: collect_info",
+      "2. On exit (hold_while_calculating): make POST to {{vercel_api_url}}/api/quote with collected data",
+      "3. On HTTP 200 + response.success: store quote_verbal_script, quote_sms_body, quote_total; enter node: deliver_quote",
+      "4. On HTTP error: say consultant callback script; close_no_quote"
+    ]
+  },
+
+  "http_call": {
+    "method": "POST",
+    "url": "{{vercel_api_url}}/api/quote",
+    "headers": { "Content-Type": "application/json" },
+    "body_template": {
+      "originZip":       "{{origin_zip}}",
+      "destinationZip":  "{{destination_zip}}",
+      "rooms":           "{{rooms_to_move}}",
+      "packingNeeded":   "{{packing_service}}",
+      "disposalNeeded":  "{{disposal_service}}",
+      "customerName":    "{{name}}",
+      "customerEmail":   "{{email_address}}"
+    }
+  },
+
+  "post_call_contact_properties": {
+    "description": "These 8 fields are written to the contact record during the call. The post-call workflow reads them to send the SMS and email.",
+    "fields": {
+      "name":            "Collected in node 1, step 1",
+      "phone":           "Collected in node 1, step 2",
+      "email_address":   "Collected in node 1, step 3",
+      "origin_zip":      "Collected in node 1, step 4",
+      "destination_zip": "Collected in node 1, step 5",
+      "rooms_to_move":   "Collected in node 1, step 7",
+      "packing_service": "Collected in node 1, step 8",
+      "disposal_service":"Collected in node 1, step 9"
+    },
+    "api_output_fields": {
+      "quote_total":          "response.quote.totalCost — triggers post-call workflow when set",
+      "quote_sms_body":       "response.smsBody — used as SMS message body",
+      "quote_verbal_script":  "response.verbalScript — read verbatim on call, kept for audit"
+    }
+  }
+}
