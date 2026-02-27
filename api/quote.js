@@ -218,6 +218,8 @@ module.exports = async function handler(req, res) {
     usingFallback = true;
   }
 
+  await new Promise(resolve => setTimeout(resolve, 5000));
+
   const quote = calculateQuote({
     rooms: numRooms,
     driveTimeHours,
